@@ -1,134 +1,210 @@
 /* st.css */
 
-/* --- Général --- */
-body {
-    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; /* Police classique et élégante */
-    background-color: #e0d8c0; /* Fond beige clair, aspect parchemin */
-    color: #4a4a4a; /* Gris foncé pour le texte principal */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+/* --- Réinitialisation et Box-sizing pour la Perfection --- */
+html {
     margin: 0;
-    padding: 15px;
-    box-sizing: border-box;
-    overflow: hidden; /* Empêche le scroll si le contenu dépasse, pour une seule page */
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Toujours pour éviter tout défilement */
 }
 
-/* --- Conteneur du Tableau de Jeu --- */
+body {
+    margin: 0;
+    padding: 0; /* Géré par les éléments internes ou flexbox */
+    width: 100%;
+    height: 100%; /* Important pour que min-height: 100vh fonctionne */
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* --- Général --- */
+body {
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+    background-color: #e0d8c0;
+    color: #4a4a4a;
+    display: flex;
+    flex-direction: column; /* Les éléments s'empilent verticalement */
+    justify-content: flex-start; /* Aligne les éléments en haut */
+    align-items: center; /* Centre les éléments horizontalement */
+    min-height: 100vh; /* S'assure que le body prend au moins toute la hauteur du viewport */
+    padding: 15px; /* Padding général pour les bords */
+    padding-top: 80px; /* Espace pour les top-controls absolus */
+    gap: 15px; /* Espacement entre les éléments flex (status et board-container) */
+}
+
+/* --- Boutons en haut de page (Maintenu en position absolue) --- */
+.top-controls {
+    position: absolute; /* Reste en position absolue pour flotter au-dessus du contenu */
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20; /* S'assure qu'il est au-dessus des autres éléments */
+    padding: 0;
+    width: calc(100% - 30px); /* S'adapte à la largeur du body avec padding */
+}
+
+.back-home-btn {
+    background: none;
+    border: none;
+    color: #5a4b40;
+    font-size: 2.5em;
+    text-decoration: none;
+    padding: 0;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+    box-shadow: none;
+}
+
+.back-home-btn:hover {
+    color: #8b4513;
+    transform: translateX(-3px);
+}
+
+.mode-indicator {
+    background: none;
+    color: #8b4513;
+    padding: 5px 10px;
+    font-size: 1em;
+    font-weight: normal;
+    border-radius: 5px;
+    white-space: nowrap;
+    box-shadow: none;
+    border: 1px solid #c0b29a;
+}
+
+/* --- Zone de Statut (messages du jeu - Maintenant dans le flux, juste après le padding du body) --- */
+#status {
+    background-color: #3e2723;
+    color: #e0d8c0;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    width: clamp(250px, 85vw, 350px); /* Responsive width for status */
+    max-width: calc(100% - 30px); /* Ensures it doesn't overflow body padding */
+    margin: 0; /* Reset margins for flexbox gap to work */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Styles spécifiques pour le statut */
+#status.win-status {
+    background: #4CAF50;
+    color: white;
+}
+
+#status.lose-status {
+    background: #D32F2F;
+    color: white;
+}
+
+#status.draw-status {
+    background: #FFC107;
+    color: #4a4a4a;
+}
+
+#status.ai-turn-status {
+    background-color: #5d4037;
+    color: #f0e0d0;
+}
+
+/* --- Conteneur du Tableau de Jeu (Maintenant dans le flux, après le statut) --- */
 .board-container {
-    background-color: #f8f8f8; /* Blanc cassé pour le fond du conteneur */
-    border: 3px solid #8b4513; /* Bordure marron foncé pour un effet bois */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), /* Ombre plus prononcée pour la profondeur */
-                inset 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre interne subtile */
+    background-color: #f8f8f8;
+    border: 3px solid #8b4513;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3),
+                inset 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative; /* Pour positionner l'écran de victoire/défaite */
-    width: clamp(280px, 90vw, 400px); /* Largeur flexible mais limitée pour mobile */
-    height: clamp(280px, 90vw, 400px);
-    margin-top: 20px; /* Espace au-dessus du plateau */
-    margin-bottom: 20px; /* Espace en dessous du plateau */
+    position: relative;
+
+    flex-grow: 1; /* Permet au plateau de prendre l'espace disponible */
+    flex-shrink: 1; /* Permet au plateau de rétrécir si nécessaire */
+    flex-basis: auto; /* Base de taille automatique */
+
+    /* La taille du plateau est calculée pour s'adapter à l'espace restant et doit toujours être carré */
+    width: 80vmin; /* Utilise vmin pour s'adapter au plus petit côté de l'écran */
+    max-height: 80vmin; /* Garde le ratio carré */
+    max-width: calc(100% - 30px); /* S'assure qu'il ne déborde pas le padding du body */
+    /* La max-height est gérée par flex-grow dans le body */
+
+    margin: 0; /* Les marges sont gérées par le gap du body */
 }
 
 /* --- SVG du Plateau de Jeu --- */
 #board {
     width: 100%;
     height: 100%;
-    max-width: 300px; /* Taille fixe pour le SVG pour garder les proportions */
-    max-height: 300px;
 }
 
 /* Lignes du plateau */
 #board line {
-    stroke: #8b4513; /* Marron foncé pour les lignes du plateau */
-    stroke-width: 2; /* Épaisseur des lignes */
-    opacity: 0.8; /* Légèrement transparent */
-    stroke-linecap: round; /* Bords arrondis pour les lignes */
+    stroke: #8b4513;
+    stroke-width: 2;
+    opacity: 0.8;
+    stroke-linecap: round;
 }
 
 /* Cercles des positions */
 #board circle {
-    /* REMOVED: fill: initial; - Les couleurs de remplissage sont maintenant spécifiques aux attributs dans JS */
-    stroke: #5a4b40; /* Bordure des cercles marron-gris */
+    stroke: #5a4b40;
     stroke-width: 3;
-    transition: all 0.2s ease-in-out; /* Animation douce pour les changements d'état */
+    transition: all 0.2s ease-in-out;
+    r: 15; /* Default radius for smaller screens */
 }
 
-/* Couleurs des pions - Ciblage par l'attribut fill "dummy" du JS */
-#board circle[fill="#e63946"] { /* Pion "X" (humain) - Ancien rouge bordeaux */
+/* Couleurs des pions - Ciblage par l'attribut data-player */
+#board circle[data-player="X"] {
     fill: #a82e2e;
     stroke: #7c2222;
 }
-#board circle[fill="#007bff"] { /* Pion "O" (IA) - Ancien bleu profond */
+#board circle[data-player="O"] {
     fill: #3f51b5;
     stroke: #2e3b8a;
 }
-#board circle[fill="#111"] { /* Cercles vides */
-    fill: #c0b29a; /* Beige plus foncé pour les trous vides */
-    stroke: #8b4513; /* Bordure marron */
+#board circle[data-player="empty"] {
+    fill: #c0b29a;
+    stroke: #8b4513;
 }
 
 /* Cercle sélectionné (pion que l'on veut bouger) */
-/* La couleur est toujours #ffd700 dans le JS, nous la mappons ici */
-#board circle[stroke="#ffd700"] { /* Couleur de sélection (or vieilli) */
-    stroke: #daa520; /* Or mat */
-    stroke-width: 6; /* Plus épais pour la sélection */
+#board circle.selected-piece {
+    stroke: #daa520;
+    stroke-width: 6;
+}
+
+/* Curseur pour les cercles cliquables */
+#board circle.clickable-circle {
+    cursor: pointer;
+}
+
+/* Curseur pour les cercles non cliquables (par défaut) */
+#board circle.unclickable-circle {
+    cursor: default;
 }
 
 /* --- Ligne de Victoire Animée --- */
 .animated-win-line {
-    stroke: #ffd700; /* Ligne de victoire dorée */
+    stroke: #ffd700;
     stroke-width: 4;
     stroke-linecap: round;
-    animation: pulseWinLine 1.5s infinite alternate; /* Animation de pulsation */
+    animation: pulseWinLine 1.5s infinite alternate;
 }
 
 @keyframes pulseWinLine {
     from { opacity: 0.5; stroke-width: 4; }
     to { opacity: 1; stroke-width: 6; }
 }
-
-/* --- Zone de Statut (messages du jeu) --- */
-#status {
-    background-color: #3e2723; /* Marron très foncé pour le statut */
-    color: #e0d8c0; /* Texte clair sur fond foncé */
-    padding: 12px 20px;
-    border-radius: 5px;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-align: center;
-    width: clamp(250px, 85vw, 350px);
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    /* Transition pour une animation douce des changements de couleur */
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Couleurs de statut spécifiques (ciblage par l'attribut style temporaire du JS) */
-#status[style*="background: rgb(0, 255, 0)"] { /* Victoire */
-    background: #4CAF50 !important; /* Vert forêt plus ancien */
-    color: white !important;
-}
-
-#status[style*="background: rgb(255, 0, 0)"] { /* Défaite */
-    background: #D32F2F !important; /* Rouge brique plus ancien */
-    color: white !important;
-}
-
-#status[style*="background: rgb(255, 255, 0)"] { /* Match nul */
-    background: #FFC107 !important; /* Jaune ocre plus ancien */
-    color: #4a4a4a !important;
-}
-/* Style par défaut quand aucun style inline n'est appliqué par JS (après `status.removeAttribute('style');`) */
-#status:not([style]) {
-    background-color: #3e2723;
-    color: #e0d8c0;
-}
-
 
 /* --- Écran de Victoire / Défaite / Nul --- */
 .winner-screen {
@@ -137,14 +213,14 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Fond semi-transparent */
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 8px; /* Correspond au bord du conteneur */
+    border-radius: 8px;
     z-index: 10;
-    animation: fadeIn 0.5s ease-out; /* Animation d'apparition */
+    animation: fadeIn 0.5s ease-out;
 }
 
 @keyframes fadeIn {
@@ -153,39 +229,40 @@ body {
 }
 
 .winner-circle {
-    width: 80px;
-    height: 80px;
+    /* Responsive sizing for winner circle */
+    width: 30%;
+    height: 30%;
     border-radius: 50%;
-    margin-bottom: 20px;
-    border: 3px solid #f0e0d0; /* Bordure claire */
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* Lueur douce */
+    margin-bottom: clamp(15px, 5vw, 30px); /* Responsive margin */
+    border: 3px solid #f0e0d0;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
     transition: background-color 0.3s ease;
 }
 
-/* Couleurs du cercle du gagnant (ciblage par l'attribut data-winner) */
-.winner-circle[data-winner="X"] { /* Rouge X */
+.winner-circle[data-winner="X"] {
     background-color: #a82e2e !important;
 }
-.winner-circle[data-winner="O"] { /* Bleu O */
+.winner-circle[data-winner="O"] {
     background-color: #3f51b5 !important;
 }
-.winner-circle[data-winner="draw"] { /* Nul */
+.winner-circle[data-winner="draw"] {
     background-color: #6d6d6d !important;
 }
 
 .winner-text {
-    color: #f0e0d0; /* Texte clair */
-    font-size: 2.5em; /* Grande taille pour le résultat */
+    color: #f0d0e0;
+    /* Responsive font size for winner text */
+    font-size:  100%;
     font-weight: bold;
     margin-bottom: 25px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Ombre pour la lisibilité */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .new-game-btn {
-    background-color: #8b4513; /* Bouton marron foncé (bois) */
+    background-color: #8b4513;
     color: white;
     padding: 12px 25px;
-    font-size: 1.1em;
+    font-size: 100%;
     font-weight: bold;
     border: none;
     border-radius: 5px;
@@ -195,7 +272,7 @@ body {
 }
 
 .new-game-btn:hover {
-    background-color: #6a340e; /* Marron plus foncé au survol */
+    background-color: #6a340e;
     transform: translateY(-2px);
 }
 
@@ -206,75 +283,32 @@ body {
 
 @keyframes movePiece {
     from {
-        transform: translate(var(--from-x) - 150px, var(--from-y) - 150px); /* Ajuster selon le centre du SVG */
+        transform: translate(0, 0);
     }
     to {
-        transform: translate(var(--to-x) - 150px, var(--to-y) - 150px); /* Ajuster selon le centre du SVG */
+        transform: translate(calc(var(--to-cx) - var(--from-cx)), calc(var(--to-cy) - var(--from-cy)));
     }
 }
-
-/* --- Boutons en haut de page --- */
-.top-controls {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 20;
-    padding: 0 5px;
-}
-
-/* Style de la flèche de retour */
-.back-home-btn {
-    background: none; /* Pas de fond, pas de bordure */
-    border: none;
-    color: #5a4b40; /* Couleur du texte (marron foncé) */
-    font-size: 2.5em; /* Grande taille pour la flèche */
-    text-decoration: none;
-    padding: 0; /* Pas de padding pour la flèche */
-    line-height: 1; /* Pour un bon alignement vertical */
-    cursor: pointer;
-    transition: color 0.2s ease, transform 0.2s ease;
-    box-shadow: none; /* Pas d'ombre */
-}
-
-.back-home-btn:hover {
-    color: #8b4513; /* Couleur un peu plus claire au survol */
-    transform: translateX(-3px); /* Petite animation vers la gauche */
-}
-
-/* Style de l'indicateur de mode (non bouton) */
-.mode-indicator {
-    background: none; /* Pas de fond */
-    color: #8b4513; /* Couleur du texte (marron bois) */
-    padding: 5px 10px; /* Moins de padding */
-    font-size: 1em; /* Taille de police légèrement plus petite */
-    font-weight: normal; /* Texte normal, pas gras */
-    border-radius: 5px; /* Garde les coins arrondis */
-    white-space: nowrap;
-    box-shadow: none; /* Pas d'ombre */
-    border: 1px solid #c0b29a; /* Petite bordure discrète */
-}
-
 
 /* --- Media Queries pour les grands écrans --- */
 @media (min-width: 768px) {
     body {
         padding: 20px;
+        padding-top: 100px; /* Plus de padding en haut pour les grands écrans */
+        gap: 20px; /* Plus d'espacement sur les grands écrans */
     }
     .board-container {
-        width: 450px;
-        height: 450px;
-        padding: 30px;
-    }
-    #board {
-        max-width: 350px;
-        max-height: 350px;
+        width: 65vmin; /* Slightly adjusted size for better fit on large screens */
+        max-height: 65vmin; /* Maintain square ratio */
+        max-width: calc(100% - 40px); /* Adjust max-width for larger padding */
+        
     }
     #board circle {
-        r: 20; /* Pions un peu plus grands */
+        r: 18; /* Larger radius for desktop circles */
+        stroke-width: 3;
+    }
+    #board circle.selected-piece {
+        stroke-width: 6;
     }
     #board line {
         stroke-width: 2.5;
@@ -282,45 +316,22 @@ body {
     #status {
         padding: 15px 25px;
         font-size: 1.3em;
-        width: 400px;
+        width: clamp(350px, 50vw, 450px);
+        max-width: calc(100% - 40px);
     }
-    .winner-circle {
-        width: 100px;
-        height: 100px;
-    }
-    .winner-text {
-        font-size: 3em;
-    }
-    .new-game-btn {
-        padding: 15px 30px;
-        font-size: 1.2em;
-    }
-
-    /* Ajustements pour les grands écrans */
     .top-controls {
         top: 20px;
         left: 20px;
         right: 20px;
-        padding: 0 10px;
+        width: calc(100% - 40px);
     }
 
     .back-home-btn {
-        font-size: 3em; /* Flèche plus grande sur desktop */
+        font-size: 3em;
     }
 
     .mode-indicator {
-        padding: 8px 18px; /* Padding ajusté pour desktop */
-        font-size: 1.1em; /* Texte plus grand sur desktop */
+        padding: 8px 18px;
+        font-size: 1.1em;
     }
-
-    /* Animation de déplacement du pion */
-    @keyframes movePiece {
-        from {
-            transform: translate(calc(var(--from-x) * 1.16 - 200px), calc(var(--from-y) * 1.16 - 200px));
-        }
-        to {
-            transform: translate(calc(var(--to-x) * 1.16 - 200px), calc(var(--to-y) * 1.16 - 200px));
-        }
-    }
-}
-
+            }
