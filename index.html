@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Jeu de Stratégie Ancien</title> <style>
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; /* Police classique */
+            background-color: #f0ead6; /* Fond doux */
+            color: #36454F; /* Gris anthracite pour le texte */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px; /* Moins de padding sur les bords pour mobile */
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border: 1px solid #d3d3d3; /* Bordure légère */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px 20px; /* Padding ajusté pour mobile */
+            border-radius: 8px;
+            text-align: center;
+            max-width: 500px; /* Max-width plus petite pour mobile */
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2.2em; /* Taille de titre ajustée pour mobile */
+            margin-bottom: 20px;
+            color: #5a4b40; /* Marron foncé */
+            letter-spacing: 0.5px; /* Espacement des lettres ajusté */
+        }
+
+        p {
+            font-size: 1em; /* Taille de paragraphe ajustée pour mobile */
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-section {
+            margin-top: 30px;
+        }
+
+        .play-button {
+            display: inline-block;
+            background-color: #7b8e72; /* Vert sourd */
+            color: white;
+            padding: 12px 30px; /* Padding ajusté pour le bouton mobile */
+            font-size: 1.2em; /* Taille de police ajustée pour le bouton */
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+            width: 80%; /* Le bouton prend plus de largeur sur mobile */
+            max-width: 250px; /* Pour éviter qu'il ne soit trop large sur des écrans plus grands */
+        }
+
+        .play-button:hover {
+            background-color: #63775a;
+            transform: translateY(-2px);
+        }
+
+        .note {
+            margin-top: 25px;
+            font-size: 0.9em; /* Taille de police ajustée pour la note */
+            color: #6c757d;
+        }
+
+        /* Media query pour les écrans plus grands (tablettes et ordinateurs) */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            .container {
+                padding: 40px 60px;
+                max-width: 700px;
+            }
+            h1 {
+                font-size: 2.8em;
+            }
+            p {
+                font-size: 1.15em;
+            }
+            .play-button {
+                padding: 15px 35px;
+                font-size: 1.3em;
+                width: auto; /* Le bouton reprend sa largeur automatique sur les grands écrans */
+            }
+            .note {
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Le Jeu de Stratégie Ancien</h1> <p>
+            Plongez dans ce **jeu de réflexion intemporel** qui mettra votre logique et votre prévoyance à l'épreuve.
+        </p>
+        <p>
+            Ce **jeu de plateau classique**, inspiré des traditions ancestrales, vous invite à déplacer et aligner vos pions pour créer un "moulin" et remporter la victoire. Facile à prendre en main, complexe à maîtriser.
+        </p>
+
+        <div class="cta-section">
+            <a href="game.html" class="play-button" aria-label="Jouer contre l'Intelligence Artificielle">Jouer contre l'IA</a>
+        </div>
+
+        <p class="note">
+            Le mode de jeu en ligne contre un ami sera disponible prochainement !
+        </p>
+    </div>
+</body>
+</html>
